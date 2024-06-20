@@ -5,7 +5,7 @@
     "main": "main.js",
     "scripts": {
         "postinstall": "electron-builder install-app-deps",
-        "start": "electron .",
+        "start": "cross-env NODE_ENV=development electron .",
         "dist": "electron-builder build --publish always"
     },
     "build": {
@@ -17,6 +17,7 @@
         }
     },
     "devDependencies": {
+        "cross-env": "^7.0.3",
         "electron": "^31.0.1",
         "electron-builder": "^25.0.0-alpha.9"
     },

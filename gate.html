@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv='Content-Security-Policy' content="default-src 'self'; script-src 'self'">
+  <meta http-equiv='Content-Security-Policy' content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
   <title>License Gate</title>
-  <link rel='stylesheet' href='./index.css'>
 </head>
 <body>
   <form id='license-gate'>
     <label for='key'>Please enter your license key</label>
     <input name='key' type='text' placeholder='Your license key'>
     <button type='submit'>Submit</button>
-    <button>Buy key</button>
     <p id="error-message" style="color: red; display: none;"></p>
   </form>
   <script src="./gate.js"></script>

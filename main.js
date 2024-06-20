@@ -32,15 +32,17 @@ async function gateCreateWindowWithLicense(createWindow) {
     width: 420,
     height: 200,
     webPreferences: {
+      nodeIntegration: true, // Enable Node.js integration
+      contextIsolation: false, // Disable context isolation for easier integration
       preload: path.join(__dirname, 'gate.js'),
-      devTools: isDev,
+      devTools: isDev, // Enable dev tools based on the environment
     },
   });
 
   gateWindow.loadFile('gate.html');
 
   if (isDev) {
-    gateWindow.webContents.openDevTools({ mode: 'detach' });
+    gateWindow.webContents.openDevTools(); // Open dev tools in detached mode
   }
 
   ipcMain.on('GATE_SUBMIT', async (event, { key }) => {
@@ -64,11 +66,15 @@ function createWindow(key) {
     width: 800,
     height: 600,
     webPreferences: {
-      devTools: isDev,
+      devTools: isDev, // Enable dev tools based on the environment
     },
   });
 
   mainWindow.loadFile('index.html');
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools(); // Open dev tools in detached mode
+  }
 
   if (!isDev) {
     autoUpdater.addAuthHeader(`License ${key}`);
