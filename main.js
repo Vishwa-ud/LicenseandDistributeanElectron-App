@@ -1,11 +1,19 @@
+require('dotenv').config();
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const { autoUpdater } = require('electron-updater');
+const CryptoJS = require('crypto-js');
 
 const isDev = process.env.NODE_ENV === 'development';
 const configPath = path.join(__dirname, 'config.json');
+const secretKey = process.env.SECRET_KEY;
+
+if (!secretKey) {
+  console.error('SECRET_KEY is not defined in the environment variables.');
+  app.quit();
+}
 
 async function validateLicenseKey(key) {
   const validation = await fetch('https://api.keygen.sh/v1/accounts/6e1546e6-e5c9-475a-86ad-5e748c6a3b31/licenses/actions/validate-key', {
@@ -25,6 +33,21 @@ async function validateLicenseKey(key) {
   }
 
   return meta.code;
+}
+
+function encryptLicenseKey(key) {
+  if (!secretKey) {
+    throw new Error('Secret key is not defined.');
+  }
+  return CryptoJS.AES.encrypt(key, secretKey).toString();
+}
+
+function decryptLicenseKey(encryptedKey) {
+  if (!secretKey) {
+    throw new Error('Secret key is not defined.');
+  }
+  const bytes = CryptoJS.AES.decrypt(encryptedKey, secretKey);
+  return bytes.toString(CryptoJS.enc.Utf8);
 }
 
 async function gateCreateWindowWithLicense(createWindow) {
@@ -54,7 +77,8 @@ async function gateCreateWindowWithLicense(createWindow) {
       case 'VALID':
       case 'EXPIRED':
         gateWindow.close();
-        saveLicenseKey(key); // Save valid license key to config.json
+        const encryptedKey = encryptLicenseKey(key);
+        saveLicenseKey(encryptedKey); // Save encrypted license key to config.json
         createWindow(key);
         break;
       default:
@@ -70,6 +94,8 @@ function createWindow(key) {
     height: 600,
     webPreferences: {
       devTools: isDev,
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
@@ -86,22 +112,43 @@ function createWindow(key) {
   }
 }
 
-// Function to save license key to config.json
-function saveLicenseKey(key) {
-  const config = { licenseKey: key };
+// Function to save encrypted license key to config.json
+function saveLicenseKey(encryptedKey) {
+  const config = { licenseKey: encryptedKey };
   fs.writeFileSync(configPath, JSON.stringify(config));
 }
 
-// Function to read license key from config.json
+// Function to read and decrypt license key from config.json
 function readLicenseKey() {
   try {
     const data = fs.readFileSync(configPath, 'utf8');
     const config = JSON.parse(data);
-    return config.licenseKey || null; // Return null if licenseKey is missing or undefined
+    if (config.licenseKey) {
+      return decryptLicenseKey(config.licenseKey);
+    } else {
+      return null; // Return null if licenseKey is missing or undefined
+    }
   } catch (err) {
     return null; // Return null if config.json doesn't exist or cannot be read
   }
 }
+
+// IPC handlers for reading, editing, and removing the license key
+ipcMain.on('READ_LICENSE_KEY', (event) => {
+  const licenseKey = readLicenseKey();
+  event.reply('LICENSE_KEY', licenseKey);
+});
+
+ipcMain.on('EDIT_LICENSE_KEY', (event, { key }) => {
+  const encryptedKey = encryptLicenseKey(key);
+  saveLicenseKey(encryptedKey);
+  event.reply('LICENSE_KEY_UPDATED');
+});
+
+ipcMain.on('REMOVE_LICENSE_KEY', (event) => {
+  fs.writeFileSync(configPath, JSON.stringify({}));
+  event.reply('LICENSE_KEY_REMOVED');
+});
 
 // App initialization
 app.whenReady().then(() => {

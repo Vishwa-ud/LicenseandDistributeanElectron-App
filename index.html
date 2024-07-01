@@ -1,10 +1,18 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv='Content-Security-Policy' content="default-src 'self'; script-src 'self'">
-    <title>main</title>
-    
-  </head>
-  <body>
-    <h1>Welcome</h1>
-  </body>
+<head>
+  <meta http-equiv='Content-Security-Policy' content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Main Config</title>
+</head>
+<body>
+  <h1>Main Configurations</h1>
+  <form id="edit-license-form">
+    <label for="edit-key">Edit License Key:</label>
+    <input id="edit-key" name="key" type="text" placeholder="Enter new license key">
+    <button type="submit">Update License Key</button>
+  </form>
+  <button id="remove-license">Remove License Key</button>
+  <p id="message"></p>
+  <script src="./renderer.js"></script>
+</body>
 </html>
