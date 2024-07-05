@@ -5,7 +5,7 @@ https://github.com/Vishwa-ud/LicenseandDistributeanElectron-App/assets/94515855/
 
 
 
-license key = 6C5714-48C976-3949FE-483267-8FACC5-V3
+license key = 7688DD-D3DB8E-84FAFA-06500D-7EEEAD-V3
 
 
 to run server  

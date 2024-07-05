@@ -16,7 +16,7 @@ if (!secretKey) {
 }
 
 async function validateLicenseKey(key) {
-  const validation = await fetch('https://api.keygen.sh/v1/accounts/6e1546e6-e5c9-475a-86ad-5e748c6a3b31/licenses/actions/validate-key', {
+  const validation = await fetch('https://api.keygen.sh/v1/accounts/18cbcbe1-3adf-4ef9-aac7-c310eca49517/licenses/actions/validate-key', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

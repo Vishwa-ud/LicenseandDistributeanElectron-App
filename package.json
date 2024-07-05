@@ -11,8 +11,8 @@
     "build": {
         "publish": {
             "provider": "keygen",
-            "account": "6e1546e6-e5c9-475a-86ad-5e748c6a3b31",
-            "product": "ff41041d-2f71-4ae4-b50f-6d67fbf64cc5",
+            "account": "18cbcbe1-3adf-4ef9-aac7-c310eca49517",
+            "product": "c24f6d6c-447c-4cdb-9e6b-3a7005d1ed74",
             "channel": "stable"
         }
     },
