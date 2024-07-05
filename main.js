@@ -54,8 +54,8 @@ async function gateCreateWindowWithLicense(createWindow) {
   const gateWindow = new BrowserWindow({
     resizable: false,
     frame: false,
-    width: 420,
-    height: 200,
+    width: 800,
+    height: 500,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

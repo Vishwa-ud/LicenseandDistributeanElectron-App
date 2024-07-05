@@ -1,5 +1,5 @@
 const express = require('express');
-const stripe = require('stripe')('YOUR_STRIPE_SECRET_KEY');
+const stripe = require('stripe')('sk_test_51PBff92LxlKPHBMAiyaAfpPv4m43et8Lo3JSoce8Vy6hODBwhwcOghK5UnPWsKEqHN1B0KYScn4raFtoFaYQh5tW00MSqrccuW');
 const bodyParser = require('body-parser');
 const path = require('path');
 
@@ -20,7 +20,7 @@ app.post('/create-checkout-session', async (req, res) => {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Your Product Name', // Replace with your product name
+              name: 'License key', // Replace with your product name
             },
             unit_amount: 1000, // Replace with the actual price in cents (e.g., $10.00 USD)
           },
@@ -28,8 +28,8 @@ app.post('/create-checkout-session', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: 'http://localhost:3000/components/success.html', // Replace with your success URL
-      cancel_url: 'http://localhost:3000/components/cancel.html', // Replace with your cancel URL
+      success_url: 'http://localhost:3000/success.html', // Replace with your success URL
+      cancel_url: 'http://localhost:3000/cancel.html', // Replace with your cancel URL
     });
 
     res.json({ id: session.id });
